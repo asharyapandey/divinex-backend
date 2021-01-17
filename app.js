@@ -10,6 +10,11 @@ const connectDB = require("./utils/database");
 
 const app = express();
 
+app.use(express.json());
+
+// user routes
+app.use("/api/user", require("./routes/user"));
+
 app.listen(PORT, (err) => {
 	if (err) throw err;
 
