@@ -32,7 +32,9 @@ Router.post(
 				return res.json(user);
 			} catch (error) {
 				console.log(error);
-				return res.status(400).json({ error: "invalid details" });
+				return res
+					.status(400)
+					.json({ error: "Could not register user" });
 			}
 		} else {
 			res.send(errors.array());
