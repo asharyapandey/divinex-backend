@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const hashPassword = (password) => {
 	return new Promise((resolve, reject) => {
@@ -13,6 +14,22 @@ const hashPassword = (password) => {
 	});
 };
 
+const verifyPassword = (passwordAttempt, hashedPassword) => {
+	return bcrypt.compare(passwordAttempt, hashedPassword);
+};
+
+const createToken = (user) => {
+	return jwt.sign(
+		{
+			id: user._id,
+			username: user.username,
+		},
+		"random-secret"
+	);
+};
+
 module.exports = {
 	hashPassword,
+	verifyPassword,
+	createToken,
 };
