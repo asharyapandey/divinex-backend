@@ -14,6 +14,8 @@ app.use(express.json());
 
 // user routes
 app.use("/api/user", require("./routes/user"));
+// post routes
+app.use("/api/post", require("./routes/post"));
 
 app.listen(PORT, (err) => {
 	if (err) throw err;
