@@ -28,3 +28,17 @@ module.exports.putUpdatePost = async (req, res) => {
 			.json({ success: false, error: "Could not update posts" });
 	}
 };
+
+module.exports.deletePost = async (req, res) => {
+	try {
+		const id = req.params.id;
+
+		const post = await Post.findOneAndDelete(id);
+		return res.status(200).json(post);
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not update posts" });
+	}
+};
