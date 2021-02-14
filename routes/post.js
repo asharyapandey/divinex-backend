@@ -5,13 +5,16 @@ const Router = express.Router();
 const Post = require("../models/Post");
 const { verifyUser } = require("../middlewares/auth");
 
+// multer middleware for file upload
+const { postUpload } = require("../middlewares/photoUpload");
+
 const {
 	postAddPost,
 	putUpdatePost,
 	deletePost,
 } = require("../controllers/post");
 
-Router.post("/", verifyUser, postAddPost);
+Router.post("/", verifyUser, postUpload, postAddPost);
 Router.put("/:id", verifyUser, putUpdatePost);
 Router.delete("/:id", verifyUser, deletePost);
 
