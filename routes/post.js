@@ -2,19 +2,20 @@ const express = require("express");
 
 const Router = express.Router();
 
-const { verifyUser } = require("../middlewares/auth");
 const Post = require("../models/Post");
+const { verifyUser } = require("../middlewares/auth");
 
-Router.post("/", verifyUser, async (req, res) => {
-	try {
-		const { caption, image } = req.body;
-		const post = new Post({ caption, image });
-		await post.save();
-		return res.status(200).json(post);
-	} catch (error) {
-		console.log(error);
-		return res.send("yeta error");
-	}
-});
+// multer middleware for file upload
+const { postUpload } = require("../middlewares/photoUpload");
+
+const {
+	postAddPost,
+	putUpdatePost,
+	deletePost,
+} = require("../controllers/post");
+
+Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
+Router.put("/:id", verifyUser, putUpdatePost);
+Router.delete("/:id", verifyUser, deletePost);
 
 module.exports = Router;
