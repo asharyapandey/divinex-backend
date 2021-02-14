@@ -44,7 +44,7 @@ Router.post(
 );
 
 // route will be used for login
-Router.get("/", async (req, res) => {
+Router.post("/login", async (req, res) => {
 	try {
 		const { username, password } = req.body;
 		const user = await User.findOne({ username });

@@ -14,7 +14,7 @@ const {
 	deletePost,
 } = require("../controllers/post");
 
-Router.post("/", verifyUser, postUpload, postAddPost);
+Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
 Router.put("/:id", verifyUser, putUpdatePost);
 Router.delete("/:id", verifyUser, deletePost);
 
