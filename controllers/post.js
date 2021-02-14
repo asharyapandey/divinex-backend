@@ -26,7 +26,7 @@ module.exports.putUpdatePost = async (req, res) => {
 		// validation if the user is the post owner
 		const user = req.user;
 
-		if (user._id != post.user)
+		if (user._id.toString() !== post.user.toString())
 			return res.status(402).json({ error: "Unauthorized to Update" });
 
 		post.caption = caption;
@@ -49,10 +49,10 @@ module.exports.deletePost = async (req, res) => {
 		// validation if the user is the post owner
 		const user = req.user;
 
-		if (user._id != post.user)
+		if (user._id.toString() !== post.user.toString())
 			return res.status(402).json({ error: "Unauthorized to Delte" });
 
-		await Post.deleteOne(id);
+		await Post.deleteOne({ _id: id });
 		return res.status(200).json(post);
 	} catch (error) {
 		console.log(error);
