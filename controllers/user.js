@@ -7,13 +7,15 @@ module.exports.postRegisterUser = async (req, res) => {
 	const errors = validationResult(req);
 
 	if (errors.isEmpty()) {
-		const { username, email, password } = req.body;
+		const { username, email, password, gender } = req.body;
 
 		try {
 			const hashedPassword = await hashPassword(password);
+			// TODO: add dummy profile picture
 			const user = User({
 				username,
 				email,
+				gender,
 				password: hashedPassword,
 			});
 			await user.save();
