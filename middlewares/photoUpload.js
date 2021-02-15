@@ -12,6 +12,18 @@ const fileStorage = multer.diskStorage({
 	},
 });
 
+const fileStorageProfile = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, "images/profile_picture");
+	},
+	filename: (req, file, cb) => {
+		const fileName = `PROFILE-${new Date().toDateString()}-${
+			file.originalname
+		}`;
+		cb(null, fileName);
+	},
+});
+
 const fileFilter = (req, file, cb) => {
 	if (file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
 		cb(null, true);
@@ -21,7 +33,9 @@ const fileFilter = (req, file, cb) => {
 };
 
 const postUpload = multer({ storage: fileStorage, fileFilter });
+const profileUpload = multer({ storage: fileStorageProfile, fileFilter });
 
 module.exports = {
 	postUpload,
+	profileUpload,
 };
