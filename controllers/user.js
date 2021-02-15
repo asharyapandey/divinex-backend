@@ -67,3 +67,30 @@ module.exports.getUser = async (req, res) => {
 		return res.status(400).json({ error: "No User Found" });
 	}
 };
+
+module.exports.putUpdateUser = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const { username, email } = req.body;
+
+		const user = await User.findOne({ _id: id });
+		if (user === null) {
+			return res.status(201).json({ error: "User not Found" });
+		}
+
+		if (req.file !== null) {
+			user.profilePicture = req.file.path;
+			user.username = username;
+			user.email = email;
+			await user.save();
+		} else {
+			user.username = username;
+			user.email = email;
+			await user.save();
+		}
+
+		return res.status(200).json(user);
+	} catch (error) {
+		return res.status(400).json({ error: "No User Found" });
+	}
+};
