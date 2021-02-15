@@ -21,6 +21,7 @@ Router.post(
 		check("username", "Please provide a username").not().isEmpty(),
 		check("email", "Please provide a valid email").isEmail(),
 		check("password", "Please provide a Password").not().isEmpty(),
+		check("gender", "Please provide a Password").not().isEmpty(),
 	],
 	postRegisterUser
 );
