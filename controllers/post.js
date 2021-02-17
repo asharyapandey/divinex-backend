@@ -1,4 +1,21 @@
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+
+module.exports.getPost = async (req, res) => {
+	try {
+		const user = req.user;
+
+		const posts = await Post.find({ user: user });
+
+		return res.status(200).json({ success: true, posts: posts });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			success: false,
+			error: "Could not get posts",
+		});
+	}
+};
 
 module.exports.postAddPost = async (req, res) => {
 	try {

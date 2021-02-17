@@ -32,7 +32,7 @@ const fileFilter = (req, file, cb) => {
 	}
 };
 
-const postUpload = multer({ storage: fileStorage, fileFilter });
+const postUpload = multer({ storage: fileStorage, fileFilter: fileFilter });
 const profileUpload = multer({ storage: fileStorageProfile, fileFilter });
 
 module.exports = {
