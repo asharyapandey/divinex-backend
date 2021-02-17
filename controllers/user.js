@@ -173,3 +173,19 @@ module.exports.deleteFollowUser = async (req, res) => {
 			.json({ success: false, error: "Could not follow user" });
 	}
 };
+
+module.exports.getSearchUser = async (req, res) => {
+	try {
+		// example url => localhost:5000/search?term=ashraya
+		const searchTerm = req.query.term;
+		const users = await User.find({
+			username: RegExp(searchTerm, "i"),
+		});
+		res.status(200).json({ success: true, users });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not Search User" });
+	}
+};

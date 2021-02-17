@@ -16,6 +16,7 @@ const {
 	putUpdateUser,
 	postFollowUser,
 	deleteFollowUser,
+	getSearchUser,
 } = require("../controllers/user");
 
 // route will be used for registration
@@ -33,12 +34,14 @@ Router.post(
 // route will be used for login
 Router.post("/login", postLoginUser);
 
-Router.get("/:id", getUser);
-
 Router.put("/:id", verifyUser, profileUpload.single("image"), putUpdateUser);
 
 // follow and unfollow
 Router.post("/follow/:id", verifyUser, postFollowUser);
 Router.delete("/unfollow/:id", verifyUser, deleteFollowUser);
+
+// search user
+Router.get("/search", verifyUser, getSearchUser);
+Router.get("/:id", getUser);
 
 module.exports = Router;
