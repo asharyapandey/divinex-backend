@@ -35,7 +35,6 @@ module.exports.postLoginUser = async (req, res) => {
 	try {
 		const { username, password } = req.body;
 		const user = await User.findOne({ username }).select("+password");
-		console.log(user);
 
 		if (user === null)
 			return res
