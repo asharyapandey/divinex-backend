@@ -147,3 +147,52 @@ module.exports.deleteComments = async (req, res) => {
 			.json({ success: false, error: "Could not delete Comments" });
 	}
 };
+
+module.exports.postLike = async (req, res) => {
+	try {
+		const postID = req.params.postId;
+		const user = req.user;
+
+		const post = await Post.findById({ _id: postID });
+		// getting previous likers
+		let prevLikers = post.like;
+		if (prevLikers == null) {
+			likers = [{ user }];
+			post.like = likers;
+		} else {
+			prevLikers.push({ user });
+			post.like = prevLikers;
+		}
+		await post.save();
+
+		return res.status(200).json({ success: true, likes: post.like.length });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not add Comments" });
+	}
+};
+
+module.exports.deleteLike = async (req, res) => {
+	try {
+		const postID = req.params.postId;
+		const user = req.user;
+
+		const post = await Post.findById({ _id: postID });
+		// getting previous likers
+		let prevLikers = post.like;
+		let newLikers = prevLikers.filter(
+			(liker) => liker.user.toString() != user._id.toString()
+		);
+		post.like = newLikers;
+		await post.save();
+
+		return res.status(200).json({ success: true, likes: post.like.length });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not add Comments" });
+	}
+};
