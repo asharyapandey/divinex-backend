@@ -103,3 +103,73 @@ module.exports.putUpdateUser = async (req, res) => {
 		return res.status(400).json({ error: "No User Found" });
 	}
 };
+
+module.exports.postFollowUser = async (req, res) => {
+	try {
+		const user = req.user;
+		const toFollow = await User.findById({ _id: req.params.id });
+
+		// getting the current logged in users following array
+		let following = user.following;
+
+		// getting the followrs array of toFollow user
+		let followers = toFollow.followers;
+
+		if (following === null) {
+			following = [{ user: toFollow }];
+		} else {
+			following.push({ user: toFollow });
+		}
+
+		if (followers === null) {
+			followers = [{ user }];
+		} else {
+			followers.push({ user });
+		}
+		user.following = following;
+		toFollow.followers = followers;
+		await user.save();
+		await toFollow.save();
+
+		res.status(200).json({ success: true });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not follow user" });
+	}
+};
+
+module.exports.deleteFollowUser = async (req, res) => {
+	try {
+		const user = req.user;
+		const toUnfollow = await User.findById({ _id: req.params.id });
+
+		// getting the current logged in users following array
+		let following = user.following;
+
+		// getting the followrs array of toFollow user
+		let followers = toUnfollow.followers;
+
+		following = following.filter(
+			(eachFollow) =>
+				eachFollow.user.toString() !== toUnfollow._id.toString()
+		);
+		followers = followers.filter(
+			(eachFollower) =>
+				eachFollower.user.toString() !== user._id.toString()
+		);
+
+		user.following = following;
+		toUnfollow.followers = followers;
+		await user.save();
+		await toUnfollow.save();
+
+		res.status(200).json({ success: true });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not follow user" });
+	}
+};
