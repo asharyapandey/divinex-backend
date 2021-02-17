@@ -80,6 +80,25 @@ module.exports.deletePost = async (req, res) => {
 	}
 };
 
+module.exports.getFeed = async (req, res) => {
+	try {
+		const currentUser = req.user;
+
+		const following = currentUser.following;
+		const posts = [];
+		for (user of following) {
+			const post = await Post.find({ user: user.user }).populate("user");
+			posts.push(...post);
+		}
+		return res.status(200).json({ success: true, posts });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not load feed" });
+	}
+};
+
 module.exports.getComments = async (req, res) => {
 	try {
 		const postID = req.params.id;
