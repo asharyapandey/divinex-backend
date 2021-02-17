@@ -18,12 +18,17 @@ const {
 	deleteComments,
 	postLike,
 	deleteLike,
+	getFeed,
 } = require("../controllers/post");
 
+// get users post
 Router.get("/", verifyUser, getPost);
 Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
 Router.put("/:id", verifyUser, putUpdatePost);
 Router.delete("/:id", verifyUser, deletePost);
+
+// get news feed
+Router.get("/feed", verifyUser, getFeed);
 
 // routes to like and dislike post
 Router.post("/like/:postId", verifyUser, postLike);
