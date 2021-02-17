@@ -12,6 +12,10 @@ const {
 	postAddPost,
 	putUpdatePost,
 	deletePost,
+	getComments,
+	postComments,
+	putComments,
+	deleteComments,
 } = require("../controllers/post");
 
 Router.get("/", verifyUser, getPost);
@@ -20,9 +24,9 @@ Router.put("/:id", verifyUser, putUpdatePost);
 Router.delete("/:id", verifyUser, deletePost);
 
 // Routes for comments
-// Router.get("/comment/:id", verifyUser);
-// Router.post("/comment/:id", verifyUser);
-// Router.put("/comment/:id", verifyUser);
-// Router.delete("/comment/:id", verifyUser);
+Router.get("/comment/:id", verifyUser, getComments);
+Router.post("/comment/:id", verifyUser, postComments);
+Router.put("/comment/:id", verifyUser, putComments);
+Router.delete("/comment/:id", verifyUser, deleteComments);
 
 module.exports = Router;
