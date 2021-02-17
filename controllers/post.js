@@ -83,9 +83,9 @@ module.exports.deletePost = async (req, res) => {
 module.exports.getComments = async (req, res) => {
 	try {
 		const postID = req.params.id;
-		const comments = await Comment.find({post: postID})
+		const comments = await Comment.find({ post: postID });
 
-		res.status(200).
+		res.status(200).json({ success: true, comments });
 	} catch (error) {
 		console.log(error);
 		return res
@@ -117,6 +117,7 @@ module.exports.postComments = async (req, res) => {
 
 module.exports.putComments = async (req, res) => {
 	try {
+		const commentID = req.params.id;
 	} catch (error) {
 		console.log(error);
 		return res
