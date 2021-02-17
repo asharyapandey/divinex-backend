@@ -117,7 +117,14 @@ module.exports.postComments = async (req, res) => {
 
 module.exports.putComments = async (req, res) => {
 	try {
-		const commentID = req.params.id;
+		const commentID = req.params.commentId;
+		const { comment } = req.body;
+
+		const oldComment = await Comment.findById(commentID);
+		oldComment.comment = comment;
+		await oldComment.save();
+
+		return res.status(200).json({ success: true, comment: oldComment });
 	} catch (error) {
 		console.log(error);
 		return res
@@ -128,6 +135,11 @@ module.exports.putComments = async (req, res) => {
 
 module.exports.deleteComments = async (req, res) => {
 	try {
+		const commentID = req.params.commentId;
+
+		await Comment.deleteOne({ _id: commentID });
+
+		return res.status(200).json({ success: true });
 	} catch (error) {
 		console.log(error);
 		return res

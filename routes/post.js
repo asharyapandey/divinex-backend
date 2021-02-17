@@ -26,7 +26,7 @@ Router.delete("/:id", verifyUser, deletePost);
 // Routes for comments
 Router.get("/comment/:id", verifyUser, getComments);
 Router.post("/comment/:id", verifyUser, postComments);
-Router.put("/comment/:id", verifyUser, putComments);
-Router.delete("/comment/:id", verifyUser, deleteComments);
+Router.put("/comment/:commentId", verifyUser, putComments);
+Router.delete("/comment/:commentId", verifyUser, deleteComments);
 
 module.exports = Router;
