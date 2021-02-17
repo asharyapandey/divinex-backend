@@ -11,6 +11,7 @@ const connectDB = require("./utils/database");
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // user routes
 app.use("/api/user", require("./routes/user"));

@@ -34,7 +34,8 @@ module.exports.postRegisterUser = async (req, res) => {
 module.exports.postLoginUser = async (req, res) => {
 	try {
 		const { username, password } = req.body;
-		const user = await User.findOne({ username });
+		const user = await User.findOne({ username }).select("+password");
+
 		if (user === null)
 			return res
 				.status(400)
