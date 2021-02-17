@@ -19,7 +19,7 @@ module.exports.postRegisterUser = async (req, res) => {
 				password: hashedPassword,
 			});
 			await user.save();
-			return res.json(user);
+			return res.status(200).json({ success: true, user });
 		} catch (error) {
 			console.log(error);
 			return res.status(400).json({ error: "Could not register user" });
@@ -34,7 +34,9 @@ module.exports.postLoginUser = async (req, res) => {
 		const { username, password } = req.body;
 		const user = await User.findOne({ username });
 		if (user === null)
-			return res.status(400).json({ error: "User Not Found" });
+			return res
+				.status(400)
+				.json({ success: false, error: "User Not Found" });
 		const passwordVerification = await verifyPassword(
 			password,
 			user.password
@@ -42,17 +44,20 @@ module.exports.postLoginUser = async (req, res) => {
 		if (passwordVerification) {
 			const jwt = createToken(user);
 			return res.status(200).json({
-				msg: "User Logged In",
+				success: true,
 				token: jwt,
 			});
 		} else {
-			return res
-				.status(400)
-				.json({ error: "Either Username or Password is incorrects" });
+			return res.status(400).json({
+				success: false,
+				error: "Either Username or Password is incorrects",
+			});
 		}
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({ error: "Could not login user" });
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not login user" });
 	}
 };
 
