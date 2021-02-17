@@ -16,12 +16,18 @@ const {
 	postComments,
 	putComments,
 	deleteComments,
+	postLike,
+	deleteLike,
 } = require("../controllers/post");
 
 Router.get("/", verifyUser, getPost);
 Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
 Router.put("/:id", verifyUser, putUpdatePost);
 Router.delete("/:id", verifyUser, deletePost);
+
+// routes to like and dislike post
+Router.post("/like/:postId", verifyUser, postLike);
+Router.delete("/unlike/:postId", verifyUser, deleteLike);
 
 // Routes for comments
 Router.get("/comment/:id", verifyUser, getComments);
