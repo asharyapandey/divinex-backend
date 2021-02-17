@@ -22,10 +22,12 @@ module.exports.postRegisterUser = async (req, res) => {
 			return res.status(200).json({ success: true, user });
 		} catch (error) {
 			console.log(error);
-			return res.status(400).json({ error: "Could not register user" });
+			return res
+				.status(400)
+				.json({ success: false, error: "Could not register user" });
 		}
 	} else {
-		res.send(errors.array());
+		res.status(400).json({ success: false, error: errors.array() });
 	}
 };
 
