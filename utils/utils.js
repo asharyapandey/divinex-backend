@@ -15,6 +15,7 @@ const hashPassword = (password) => {
 };
 
 const verifyPassword = (passwordAttempt, hashedPassword) => {
+	console.log(passwordAttempt, hashedPassword);
 	return bcrypt.compare(passwordAttempt, hashedPassword);
 };
 
