@@ -28,7 +28,7 @@ module.exports.postAddPost = async (req, res) => {
 
 		const post = new Post({ caption, image, user });
 		await post.save();
-		return res.status(200).json(post);
+		return res.status(200).json({ success: true, post });
 	} catch (error) {
 		console.log(error);
 		return res.send("yeta error");
@@ -49,7 +49,7 @@ module.exports.putUpdatePost = async (req, res) => {
 
 		post.caption = caption;
 		await post.save();
-		return res.status(200).json(post);
+		return res.status(200).json({ success: true, post });
 	} catch (error) {
 		console.log(error);
 		return res

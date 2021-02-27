@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const morgan = require("morgan");
 
 // constants
 const PORT = 5000;
@@ -8,10 +9,16 @@ const MONGO_URI = "mongodb://localhost:27017/divinex";
 // database
 const connectDB = require("./utils/database");
 
+const MODE = "DEV";
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+if (MODE === "DEV") {
+	app.use(morgan("dev"));
+}
 
 // user routes
 app.use("/api/user", require("./routes/user"));
