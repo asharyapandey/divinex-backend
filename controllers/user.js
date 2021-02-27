@@ -16,7 +16,7 @@ module.exports.postRegisterUser = async (req, res) => {
 				username,
 				email,
 				gender,
-				password: hashedPassword,
+				password: hashedPasswordd,
 			});
 			await user.save();
 			return res.status(200).json({ success: true, user });

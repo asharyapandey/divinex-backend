@@ -21,6 +21,10 @@ module.exports.getPost = async (req, res) => {
 module.exports.postAddPost = async (req, res) => {
 	try {
 		const { caption } = req.body;
+		if (req.file === undefined)
+			return res
+				.status(400)
+				.json({ success: false, error: "Invalid File" });
 		const image = req.file.path;
 
 		// getting user

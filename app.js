@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const path = require("path");
 
 // constants
 const PORT = 5000;
@@ -20,6 +21,7 @@ if (MODE === "DEV") {
 	app.use(morgan("dev"));
 }
 
+app.use("/images", express.static(path.join(__dirname, "images")));
 // user routes
 app.use("/api/user", require("./routes/user"));
 // post routes
