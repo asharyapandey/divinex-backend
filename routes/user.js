@@ -31,6 +31,9 @@ Router.post(
 	postRegisterUser
 );
 
+// get Logged In user
+Router.get("/", verifyUser, getUser);
+
 // route will be used for login
 Router.post("/login", postLoginUser);
 
@@ -42,6 +45,5 @@ Router.delete("/unfollow/:id", verifyUser, deleteFollowUser);
 
 // search user
 Router.get("/search", verifyUser, getSearchUser);
-Router.get("/:id", getUser);
 
 module.exports = Router;
