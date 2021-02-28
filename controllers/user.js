@@ -65,16 +65,17 @@ module.exports.postLoginUser = async (req, res) => {
 };
 
 module.exports.getUser = async (req, res) => {
-	const id = req.params.id;
 	try {
-		const user = await User.findOne({ _id: id });
+		const user = req.user;
 		if (user === null) {
-			return res.status(201).json({ error: "User not Found" });
+			return res
+				.status(201)
+				.json({ success: false, error: "User not Found" });
 		}
 
-		return res.json(user);
+		return res.json({ success: true, user });
 	} catch (error) {
-		return res.status(400).json({ error: "No User Found" });
+		return res.status(400).json({ success: false, error: "No User Found" });
 	}
 };
 
