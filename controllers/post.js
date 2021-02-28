@@ -6,7 +6,7 @@ module.exports.getPost = async (req, res) => {
 	try {
 		const user = req.user;
 
-		const posts = await Post.find({ user: user });
+		const posts = await Post.find({ user: user }).populate("user");
 
 		return res.status(200).json({ success: true, posts: posts });
 	} catch (error) {
