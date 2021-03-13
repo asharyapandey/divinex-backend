@@ -92,6 +92,11 @@ module.exports.getFeed = async (req, res) => {
 		const posts = [];
 		for (user of following) {
 			const post = await Post.find({ user: user.user }).populate("user");
+			// for (p of post) {
+			// 	const comments = await Comment.find({ post: p._id });
+			// 	var o = { ...p._doc, comments };
+			// 	posts.push(o);
+			// }
 			posts.push(...post);
 		}
 		return res.status(200).json({ success: true, posts });
