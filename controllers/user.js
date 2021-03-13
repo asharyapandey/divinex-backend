@@ -10,9 +10,15 @@ module.exports.postRegisterUser = async (req, res) => {
 		const { username, email, password, gender } = req.body;
 
 		try {
+			let user = await User.findOne({ username });
+			if (user)
+				return res
+					.status(409)
+					.json({ success: false, error: "Username already exists" });
+
 			const hashedPassword = await hashPassword(password);
 			// TODO: add dummy profile picture
-			const user = User({
+			user = User({
 				username,
 				email,
 				gender,
@@ -79,6 +85,21 @@ module.exports.getUser = async (req, res) => {
 	}
 };
 
+module.exports.getUserById = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const user = await User.findById(id);
+		if (user === null) {
+			return res
+				.status(201)
+				.json({ success: false, error: "User not Found" });
+		}
+
+		return res.json({ success: true, user });
+	} catch (error) {
+		return res.status(400).json({ success: false, error: "No User Found" });
+	}
+};
 module.exports.putUpdateUser = async (req, res) => {
 	try {
 		const id = req.params.id;
