@@ -39,7 +39,6 @@ Router.get("/", verifyUser, getUser);
 Router.post("/login", postLoginUser);
 
 Router.put("/:id", verifyUser, profileUpload.single("image"), putUpdateUser);
-Router.get("/:id", verifyUser, getUserById);
 
 // follow and unfollow
 Router.post("/follow/:id", verifyUser, postFollowUser);
@@ -47,5 +46,6 @@ Router.delete("/unfollow/:id", verifyUser, deleteFollowUser);
 
 // search user
 Router.get("/search", verifyUser, getSearchUser);
+Router.get("/:id", verifyUser, getUserById);
 
 module.exports = Router;

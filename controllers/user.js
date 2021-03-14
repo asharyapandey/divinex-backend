@@ -22,7 +22,7 @@ module.exports.postRegisterUser = async (req, res) => {
 				username,
 				email,
 				gender,
-				password: hashedPasswordd,
+				password: hashedPassword,
 			});
 			await user.save();
 			return res.status(200).json({ success: true, user });
@@ -33,6 +33,7 @@ module.exports.postRegisterUser = async (req, res) => {
 				.json({ success: false, error: "Could not register user" });
 		}
 	} else {
+		console.log(errors.array());
 		res.status(400).json({ success: false, error: errors.array() });
 	}
 };

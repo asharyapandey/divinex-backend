@@ -19,6 +19,7 @@ const {
 	postLike,
 	deleteLike,
 	getFeed,
+	getPostById,
 } = require("../controllers/post");
 
 // get users post
@@ -39,5 +40,8 @@ Router.get("/comment/:id", verifyUser, getComments);
 Router.post("/comment/:id", verifyUser, postComments);
 Router.put("/comment/:commentId", verifyUser, putComments);
 Router.delete("/comment/:commentId", verifyUser, deleteComments);
+
+// getting post by id
+Router.get("/user/:id", verifyUser, getPost);
 
 module.exports = Router;
