@@ -4,6 +4,7 @@ const { validationResult } = require("express-validator");
 const { hashPassword, verifyPassword, createToken } = require("../utils/utils");
 
 module.exports.postRegisterUser = async (req, res) => {
+	console.log(req.body);
 	const errors = validationResult(req);
 
 	if (errors.isEmpty()) {
@@ -56,6 +57,7 @@ module.exports.postLoginUser = async (req, res) => {
 			return res.status(200).json({
 				success: true,
 				token: jwt,
+				user,
 			});
 		} else {
 			return res.status(400).json({
@@ -89,7 +91,9 @@ module.exports.getUser = async (req, res) => {
 module.exports.getUserById = async (req, res) => {
 	try {
 		const id = req.params.id;
-		const user = await User.findById(id);
+		const user = await User.findById(id)
+			.populate("followers.user")
+			.populate("following.user");
 		if (user === null) {
 			return res
 				.status(201)

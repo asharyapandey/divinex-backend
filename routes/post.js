@@ -25,7 +25,7 @@ const {
 // get users post
 Router.get("/", verifyUser, getPost);
 Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
-Router.put("/:id", verifyUser, putUpdatePost);
+Router.put("/:id", verifyUser, postUpload.single("image"), putUpdatePost);
 Router.delete("/:id", verifyUser, deletePost);
 
 // get news feed
@@ -42,6 +42,6 @@ Router.put("/comment/:commentId", verifyUser, putComments);
 Router.delete("/comment/:commentId", verifyUser, deleteComments);
 
 // getting post by id
-Router.get("/user/:id", verifyUser, getPost);
+Router.get("/user/:id", verifyUser, getPostById);
 
 module.exports = Router;

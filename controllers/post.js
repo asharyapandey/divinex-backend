@@ -59,15 +59,19 @@ module.exports.putUpdatePost = async (req, res) => {
 	try {
 		const id = req.params.id;
 		const { caption } = req.body;
+		const image = req.file.path;
 		const post = await Post.findById(id);
 
 		// validation if the user is the post owner
 		const user = req.user;
 
 		if (user._id.toString() !== post.user.toString())
-			return res.status(402).json({ error: "Unauthorized to Update" });
+			return res
+				.status(402)
+				.json({ success: false, error: "Unauthorized to Update" });
 
 		post.caption = caption;
+		post.image = image;
 		await post.save();
 		return res.status(200).json({ success: true, post });
 	} catch (error) {
@@ -88,10 +92,12 @@ module.exports.deletePost = async (req, res) => {
 		const user = req.user;
 
 		if (user._id.toString() !== post.user.toString())
-			return res.status(402).json({ error: "Unauthorized to Delte" });
+			return res
+				.status(402)
+				.json({ success: false, error: "Unauthorized to Delte" });
 
 		await Post.deleteOne({ _id: id });
-		return res.status(200).json(post);
+		return res.status(200).json({ success: true, post });
 	} catch (error) {
 		console.log(error);
 		return res
