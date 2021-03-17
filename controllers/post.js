@@ -133,7 +133,9 @@ module.exports.getFeed = async (req, res) => {
 module.exports.getComments = async (req, res) => {
 	try {
 		const postID = req.params.id;
-		const comments = await Comment.find({ post: postID });
+		const comments = await Comment.find({ post: postID }).populate(
+			"commentedBy"
+		);
 
 		res.status(200).json({ success: true, comments });
 	} catch (error) {
