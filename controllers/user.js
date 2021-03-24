@@ -54,10 +54,21 @@ module.exports.postLoginUser = async (req, res) => {
 		);
 		if (passwordVerification) {
 			const jwt = createToken(user);
+			const newFollowers = user.followers.filter(
+				(follower) => follower.user
+			);
+			const newFollowing = user.following.map(
+				(follower) => follower.user
+			);
+			const newUser = {
+				...user._doc,
+				following: newFollowing,
+				followers: newFollowers,
+			};
 			return res.status(200).json({
 				success: true,
 				token: jwt,
-				user,
+				user: newUser,
 			});
 		} else {
 			return res.status(400).json({
@@ -107,7 +118,7 @@ module.exports.getUserById = async (req, res) => {
 			followers: newFollowers,
 		};
 
-		return res.json({ success: true, newUser });
+		return res.json({ success: true, user: newUser });
 	} catch (error) {
 		return res.status(400).json({ success: false, error: "No User Found" });
 	}
