@@ -130,6 +130,28 @@ module.exports.getFeed = async (req, res) => {
 	}
 };
 
+module.exports.getExplorePosts = async (req, res) => {
+	try {
+		const user = req.user;
+
+		const posts = [];
+		const explorePosts = await Post.find({
+			user: { $ne: user._id },
+		}).populate("user");
+		for (p of explorePosts) {
+			const comments = await Comment.find({ post: p._id });
+			var post = { ...p._doc, comments };
+			posts.push(post);
+		}
+		return res.status(200).json({ success: true, posts });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not load feed" });
+	}
+};
+
 module.exports.getComments = async (req, res) => {
 	try {
 		const postID = req.params.id;
@@ -172,7 +194,9 @@ module.exports.putComments = async (req, res) => {
 		const commentID = req.params.commentId;
 		const { comment } = req.body;
 
-		const oldComment = await Comment.findById(commentID);
+		const oldComment = await Comment.findById(commentID).populate(
+			"commentedBy"
+		);
 		oldComment.comment = comment;
 		await oldComment.save();
 

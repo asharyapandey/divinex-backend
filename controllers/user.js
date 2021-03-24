@@ -99,8 +99,15 @@ module.exports.getUserById = async (req, res) => {
 				.status(201)
 				.json({ success: false, error: "User not Found" });
 		}
+		const newFollowers = user.followers.filter((follower) => follower.user);
+		const newFollowing = user.following.map((follower) => follower.user);
+		const newUser = {
+			...user._doc,
+			following: newFollowing,
+			followers: newFollowers,
+		};
 
-		return res.json({ success: true, user });
+		return res.json({ success: true, newUser });
 	} catch (error) {
 		return res.status(400).json({ success: false, error: "No User Found" });
 	}

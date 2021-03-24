@@ -20,6 +20,7 @@ const {
 	deleteLike,
 	getFeed,
 	getPostById,
+	getExplorePosts,
 } = require("../controllers/post");
 
 // get users post
@@ -30,6 +31,9 @@ Router.delete("/:id", verifyUser, deletePost);
 
 // get news feed
 Router.get("/feed", verifyUser, getFeed);
+
+// get explore posts
+Router.get("/explore", verifyUser, getExplorePosts);
 
 // routes to like and dislike post
 Router.post("/like/:postId", verifyUser, postLike);
