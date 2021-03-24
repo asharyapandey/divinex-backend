@@ -57,17 +57,7 @@ module.exports.postLoginUser = async (req, res) => {
 		);
 		if (passwordVerification) {
 			const jwt = createToken(user);
-			const newFollowers = user.followers.filter(
-				(follower) => follower.user
-			);
-			const newFollowing = user.following.map(
-				(follower) => follower.user
-			);
-			const newUser = {
-				...user._doc,
-				following: newFollowing,
-				followers: newFollowers,
-			};
+			const newUser = user.convertFollowStats();
 			return res.status(200).json({
 				success: true,
 				token: jwt,
@@ -113,17 +103,11 @@ module.exports.getUserById = async (req, res) => {
 				.status(201)
 				.json({ success: false, error: "User not Found" });
 		}
-		// const newFollowers = user.followers.filter((follower) => follower.user);
-		// const newFollowing = user.following.map((follower) => follower.user);
-		// const newUser = {
-		// 	...user._doc,
-		// 	following: newFollowing,
-		// 	followers: newFollowers,
-		// };
-	const newUser = user.
+		const newUser = user.convertFollowStats();
 
 		return res.json({ success: true, user: newUser });
 	} catch (error) {
+		console.log(error);
 		return res.status(400).json({ success: false, error: "No User Found" });
 	}
 };
@@ -184,16 +168,10 @@ module.exports.postFollowUser = async (req, res) => {
 		await toFollow.save();
 
 		// sending the new user
-		const user = await User.findById(user._id)
+		const populatedUser = await User.findById(user._id)
 			.populate("followers.user")
 			.populate("following.user");
-		const newFollowers = user.followers.filter((follower) => follower.user);
-		const newFollowing = user.following.map((follower) => follower.user);
-		const newUser = {
-			...user._doc,
-			following: newFollowing,
-			followers: newFollowers,
-		};
+		const newUser = populatedUser.convertFollowStats();
 
 		res.status(200).json({ success: true, user: newUser });
 	} catch (error) {
@@ -229,7 +207,13 @@ module.exports.deleteFollowUser = async (req, res) => {
 		await user.save();
 		await toUnfollow.save();
 
-		res.status(200).json({ success: true });
+		// sending the new user
+		const populatedUser = await User.findById(user._id)
+			.populate("followers.user")
+			.populate("following.user");
+		const newUser = populatedUser.convertFollowStats();
+
+		res.status(200).json({ success: true, user: newUser });
 	} catch (error) {
 		console.log(error);
 		return res
