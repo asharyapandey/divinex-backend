@@ -42,7 +42,10 @@ module.exports.postRegisterUser = async (req, res) => {
 module.exports.postLoginUser = async (req, res) => {
 	try {
 		const { username, password } = req.body;
-		const user = await User.findOne({ username }).select("+password");
+		const user = await User.findOne({ username })
+			.select("+password")
+			.populate("followers.user")
+			.populate("following.user");
 
 		if (user === null)
 			return res
@@ -110,13 +113,14 @@ module.exports.getUserById = async (req, res) => {
 				.status(201)
 				.json({ success: false, error: "User not Found" });
 		}
-		const newFollowers = user.followers.filter((follower) => follower.user);
-		const newFollowing = user.following.map((follower) => follower.user);
-		const newUser = {
-			...user._doc,
-			following: newFollowing,
-			followers: newFollowers,
-		};
+		// const newFollowers = user.followers.filter((follower) => follower.user);
+		// const newFollowing = user.following.map((follower) => follower.user);
+		// const newUser = {
+		// 	...user._doc,
+		// 	following: newFollowing,
+		// 	followers: newFollowers,
+		// };
+	const newUser = user.
 
 		return res.json({ success: true, user: newUser });
 	} catch (error) {
@@ -179,7 +183,19 @@ module.exports.postFollowUser = async (req, res) => {
 		await user.save();
 		await toFollow.save();
 
-		res.status(200).json({ success: true });
+		// sending the new user
+		const user = await User.findById(user._id)
+			.populate("followers.user")
+			.populate("following.user");
+		const newFollowers = user.followers.filter((follower) => follower.user);
+		const newFollowing = user.following.map((follower) => follower.user);
+		const newUser = {
+			...user._doc,
+			following: newFollowing,
+			followers: newFollowers,
+		};
+
+		res.status(200).json({ success: true, user: newUser });
 	} catch (error) {
 		console.log(error);
 		return res
