@@ -21,12 +21,14 @@ const {
 	getFeed,
 	getPostById,
 	getExplorePosts,
+	getSinglePost,
 } = require("../controllers/post");
 
 // get users post
 Router.get("/", verifyUser, getPost);
 Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
 Router.put("/:id", verifyUser, postUpload.single("image"), putUpdatePost);
+Router.get("/:id", verifyUser, getSinglePost);
 Router.delete("/:id", verifyUser, deletePost);
 
 // get news feed

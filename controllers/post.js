@@ -82,6 +82,19 @@ module.exports.putUpdatePost = async (req, res) => {
 	}
 };
 
+module.exports.getSinglePost = async (req, res) => {
+	try {
+		const postID = req.params.id;
+		const post = await Post.findOne({ _id: postID }).populate("user");
+
+		res.status(200).json({ success: true, post });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not fetch Post" });
+	}
+};
 module.exports.deletePost = async (req, res) => {
 	try {
 		const id = req.params.id;
