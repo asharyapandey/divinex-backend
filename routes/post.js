@@ -28,7 +28,6 @@ const {
 Router.get("/", verifyUser, getPost);
 Router.post("/", verifyUser, postUpload.single("image"), postAddPost);
 Router.put("/:id", verifyUser, postUpload.single("image"), putUpdatePost);
-Router.get("/:id", verifyUser, getSinglePost);
 Router.delete("/:id", verifyUser, deletePost);
 
 // get news feed
@@ -49,5 +48,6 @@ Router.delete("/comment/:commentId", verifyUser, deleteComments);
 
 // getting post by id
 Router.get("/user/:id", verifyUser, getPostById);
+Router.get("/:id", verifyUser, getSinglePost);
 
 module.exports = Router;

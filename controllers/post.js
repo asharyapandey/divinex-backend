@@ -60,12 +60,13 @@ module.exports.putUpdatePost = async (req, res) => {
 		const id = req.params.id;
 		const { caption } = req.body;
 		const image = req.file.path;
-		const post = await Post.findById(id);
+		const post = await Post.findById(id).populate("user");
 
 		// validation if the user is the post owner
 		const user = req.user;
+		console.log(user);
 
-		if (user._id.toString() !== post.user.toString())
+		if (user._id.toString() !== post.user._id.toString())
 			return res
 				.status(402)
 				.json({ success: false, error: "Unauthorized to Update" });
@@ -242,7 +243,7 @@ module.exports.postLike = async (req, res) => {
 		const postID = req.params.postId;
 		const user = req.user;
 
-		const post = await Post.findById({ _id: postID });
+		const post = await Post.findById({ _id: postID }).populate("user");
 		// getting previous likers
 		let prevLikers = post.like;
 		if (prevLikers == null) {
@@ -254,7 +255,9 @@ module.exports.postLike = async (req, res) => {
 		}
 		await post.save();
 
-		return res.status(200).json({ success: true, likes: post.like.length });
+		return res
+			.status(200)
+			.json({ success: true, likes: post.like.length, post });
 	} catch (error) {
 		console.log(error);
 		return res
@@ -268,7 +271,7 @@ module.exports.deleteLike = async (req, res) => {
 		const postID = req.params.postId;
 		const user = req.user;
 
-		const post = await Post.findById({ _id: postID });
+		const post = await Post.findById({ _id: postID }).populate("user");
 		// getting previous likers
 		let prevLikers = post.like;
 		let newLikers = prevLikers.filter(
@@ -277,7 +280,9 @@ module.exports.deleteLike = async (req, res) => {
 		post.like = newLikers;
 		await post.save();
 
-		return res.status(200).json({ success: true, likes: post.like.length });
+		return res
+			.status(200)
+			.json({ success: true, likes: post.like.length, post });
 	} catch (error) {
 		console.log(error);
 		return res

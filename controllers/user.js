@@ -114,7 +114,7 @@ module.exports.getUserById = async (req, res) => {
 module.exports.putUpdateUser = async (req, res) => {
 	try {
 		const id = req.params.id;
-		const { username, email, gender } = req.body;
+		const { email, gender } = req.body;
 
 		const user = await User.findOne({ _id: id });
 		if (user === null) {
@@ -123,12 +123,10 @@ module.exports.putUpdateUser = async (req, res) => {
 
 		if (req.file !== null) {
 			user.profilePicture = req.file.path;
-			user.username = username;
 			user.email = email;
 			user.gender = gender;
 			await user.save();
 		} else {
-			user.username = username;
 			user.email = email;
 			user.gender = gender;
 			await user.save();
