@@ -18,6 +18,7 @@ const {
 	deleteFollowUser,
 	getSearchUser,
 	getUserById,
+	getSuggestedUsers,
 } = require("../controllers/user");
 
 // route will be used for registration
@@ -46,6 +47,8 @@ Router.delete("/unfollow/:id", verifyUser, deleteFollowUser);
 
 // search user
 Router.get("/search", verifyUser, getSearchUser);
+Router.get("/suggest", verifyUser, getSuggestedUsers);
+
 Router.get("/:id", verifyUser, getUserById);
 
 module.exports = Router;

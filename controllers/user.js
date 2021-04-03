@@ -118,7 +118,9 @@ module.exports.putUpdateUser = async (req, res) => {
 
 		const user = await User.findOne({ _id: id });
 		if (user === null) {
-			return res.status(201).json({ error: "User not Found" });
+			return res
+				.status(201)
+				.json({ success: false, error: "User not Found" });
 		}
 
 		if (req.file !== null) {
@@ -132,9 +134,9 @@ module.exports.putUpdateUser = async (req, res) => {
 			await user.save();
 		}
 
-		return res.status(200).json(user);
+		return res.status(200).json({ success: true, user });
 	} catch (error) {
-		return res.status(400).json({ error: "No User Found" });
+		return res.status(400).json({ success: false, error: "No User Found" });
 	}
 };
 
@@ -233,5 +235,26 @@ module.exports.getSearchUser = async (req, res) => {
 		return res
 			.status(500)
 			.json({ success: false, error: "Could not Search User" });
+	}
+};
+
+module.exports.getSuggestedUsers = async (req, res) => {
+	try {
+		const currentUser = req.user;
+		const usrs = [];
+		currentUser.following.forEach((user) => {
+			usrs.push(user.user._id);
+		});
+		usrs.push(currentUser._id);
+
+		const users = await User.find({
+			_id: { $nin: usrs },
+		});
+		res.status(200).json({ success: true, users });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not get Users" });
 	}
 };
