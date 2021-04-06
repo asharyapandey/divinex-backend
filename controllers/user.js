@@ -172,8 +172,12 @@ module.exports.postFollowUser = async (req, res) => {
 			.populate("followers.user")
 			.populate("following.user");
 		const newUser = populatedUser.convertFollowStats();
+		let followedUser = await User.findById(req.params.id)
+			.populate("followers.user")
+			.populate("following.user");
+		followedUser = followedUser.convertFollowStats();
 
-		res.status(200).json({ success: true, user: newUser });
+		res.status(200).json({ success: true, user: newUser, followedUser });
 	} catch (error) {
 		console.log(error);
 		return res
@@ -195,12 +199,11 @@ module.exports.deleteFollowUser = async (req, res) => {
 
 		following = following.filter(
 			(eachFollow) =>
-				eachFollow.user.toString() !== toUnfollow._id.toString()
+				eachFollow.user._id.toString() !== toUnfollow._id.toString()
 		);
-		followers = followers.filter(
-			(eachFollower) =>
-				eachFollower.user.toString() !== user._id.toString()
-		);
+		followers = followers.filter((eachFollower) => {
+			eachFollower.user.toString() !== user._id.toString();
+		});
 
 		user.following = following;
 		toUnfollow.followers = followers;
@@ -212,8 +215,12 @@ module.exports.deleteFollowUser = async (req, res) => {
 			.populate("followers.user")
 			.populate("following.user");
 		const newUser = populatedUser.convertFollowStats();
+		const deletedFollowed = await User.findById(req.params.id)
+			.populate("followers.user")
+			.populate("following.user");
+		const unFollowedUser = deletedFollowed.convertFollowStats();
 
-		res.status(200).json({ success: true, user: newUser });
+		res.status(200).json({ success: true, user: newUser, unFollowedUser });
 	} catch (error) {
 		console.log(error);
 		return res
