@@ -12,7 +12,8 @@ const verifyUser = async (req, res, next) => {
 		const decoded = jwt.verify(token, "random-secret");
 		const user = await User.findById({ _id: decoded.id }, { password: 0 })
 			.populate("followers.user")
-			.populate("following.user");
+			.populate("following.user")
+			.populate("notification.user");
 		// add user to the request
 		req.user = user;
 

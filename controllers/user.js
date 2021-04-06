@@ -164,6 +164,12 @@ module.exports.postFollowUser = async (req, res) => {
 		}
 		user.following = following;
 		toFollow.followers = followers;
+
+		// adding notificaion
+		const notification = { user: user._id, action: "Follow" };
+		// toFollow.notification.push(notification)
+		toFollow.addNotification("Follow", user._id);
+
 		await user.save();
 		await toFollow.save();
 

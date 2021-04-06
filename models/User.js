@@ -39,6 +39,22 @@ const userSchema = mongoose.Schema({
 			},
 		},
 	],
+	notification: [
+		{
+			user: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+			},
+			action: {
+				type: String,
+				enum: ["Follow", "Commented", "Liked"],
+			},
+			isRead: {
+				type: Boolean,
+				default: false,
+			},
+		},
+	],
 });
 
 // converts follow stats to {userDetails} from {_id: ..., user: {userDetaila}}
@@ -51,6 +67,18 @@ userSchema.methods.convertFollowStats = function () {
 		followers: newFollowers,
 	};
 	return newUser;
+};
+
+userSchema.methods.addNotification = function (type, by) {
+	try {
+		const notification = {
+			user: mongoose.Types.ObjectId(by),
+			action: type,
+		};
+		this.notification.push(notification);
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 module.exports = mongoose.model("User", userSchema);
