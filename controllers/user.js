@@ -4,7 +4,6 @@ const { validationResult } = require("express-validator");
 const { hashPassword, verifyPassword, createToken } = require("../utils/utils");
 
 module.exports.postRegisterUser = async (req, res) => {
-	console.log(req.body);
 	const errors = validationResult(req);
 
 	if (errors.isEmpty()) {
@@ -112,6 +111,7 @@ module.exports.getUserById = async (req, res) => {
 	}
 };
 module.exports.putUpdateUser = async (req, res) => {
+	console.log(req.file);
 	try {
 		const id = req.params.id;
 		const { email, gender } = req.body;
@@ -123,7 +123,7 @@ module.exports.putUpdateUser = async (req, res) => {
 				.json({ success: false, error: "User not Found" });
 		}
 
-		if (req.file !== null) {
+		if (req.file) {
 			user.profilePicture = req.file.path;
 			user.email = email;
 			user.gender = gender;
@@ -136,6 +136,7 @@ module.exports.putUpdateUser = async (req, res) => {
 
 		return res.status(200).json({ success: true, user });
 	} catch (error) {
+		console.log(error);
 		return res.status(400).json({ success: false, error: "No User Found" });
 	}
 };
@@ -269,5 +270,17 @@ module.exports.getSuggestedUsers = async (req, res) => {
 		return res
 			.status(500)
 			.json({ success: false, error: "Could not get Users" });
+	}
+};
+
+module.exports.getNotifications = async (req, res) => {
+	try {
+		const notifications = req.user.notification;
+		res.status(200).json({ success: true, notifications });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not get Notifications" });
 	}
 };
