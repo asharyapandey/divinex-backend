@@ -2,6 +2,7 @@ const User = require("../models/User");
 const { validationResult } = require("express-validator");
 
 const { hashPassword, verifyPassword, createToken } = require("../utils/utils");
+const { findById } = require("../models/User");
 
 module.exports.postRegisterUser = async (req, res) => {
 	const errors = validationResult(req);
@@ -277,6 +278,27 @@ module.exports.getNotifications = async (req, res) => {
 	try {
 		const notifications = req.user.notification;
 		res.status(200).json({ success: true, notifications });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Could not get Notifications" });
+	}
+};
+
+module.exports.deleteNotifications = async (req, res) => {
+	try {
+		const id = req.params.id;
+		let notifications = req.user.notification;
+
+		notifications = notifications.filter(
+			(notification) => notification._id != id
+		);
+
+		req.user.notification = notifications;
+		await req.user.save();
+
+		res.status(200).json({ success: true, user: req.user });
 	} catch (error) {
 		console.log(error);
 		return res
