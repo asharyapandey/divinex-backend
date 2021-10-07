@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const path = require("path");
+const cors = require("cors");
 
 // constants
 const PORT = 5000;
@@ -13,6 +14,7 @@ const connectDB = require("./utils/database");
 const MODE = "DEV";
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
